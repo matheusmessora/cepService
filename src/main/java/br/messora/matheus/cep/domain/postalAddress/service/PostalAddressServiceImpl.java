@@ -15,7 +15,7 @@ public class PostalAddressServiceImpl implements PostalAddressService {
 
     @Override
     public PostalAddress find(CEP cep) {
-        Logradouro logradouro = repository.findByCEP(cep.fullCode());
+        Logradouro logradouro = repository.findByCep(cep.fullCode());
         return null;
     }
 }

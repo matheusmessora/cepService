@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Date;
 
 @Entity
 public class Logradouro {
@@ -14,7 +13,7 @@ public class Logradouro {
     private Long id;
 
     @Column
-    private String CEP;
+    private String cep;
 
     @Column
     private String description;
@@ -27,12 +26,12 @@ public class Logradouro {
         this.id = id;
     }
 
-    public String getCEP() {
-        return CEP;
+    public String getCep() {
+        return cep;
     }
 
-    public void setCEP(String CEP) {
-        this.CEP = CEP;
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
     public String getDescription() {

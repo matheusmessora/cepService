@@ -34,9 +34,9 @@ public class PostalAddressServiceTest {
         CEP cep = CEP.from("01535001");
         Logradouro mock = new Logradouro();
         mock.setDescription("Rua Paulo Orozimbo");
-        mock.setCEP("01535001");
+        mock.setCep("01535001");
         mock.setId(1L);
-        when(logradouroRepository.findByCEP(cep.fullCode())).thenReturn(mock);
+        when(logradouroRepository.findByCep(cep.fullCode())).thenReturn(mock);
 
         PostalAddress postalAddress = service.find(cep);
 
