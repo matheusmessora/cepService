@@ -7,15 +7,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan("br.com.pandox.lastcloud")
-@EnableScheduling
+@ComponentScan("br.messora.matheus.cep")
 @EnableWebMvc
 public class ApplicationInitializer {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
     public ApplicationInitializer() throws Exception {
-        LOGGER.info("Initializing Application");
+        LOGGER.info("Inicializando aplicacao");
     }
 
 }

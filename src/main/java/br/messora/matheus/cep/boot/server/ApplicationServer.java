@@ -1,4 +1,4 @@
-package br.messora.matheus.cep.boot;
+package br.messora.matheus.cep.boot.server;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -6,6 +6,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.eclipse.jetty.util.thread.ThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
@@ -14,44 +15,48 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import java.io.IOException;
 
-public class ApplicationServer {
-    private final String CONFIG_LOCATION = "br.messora.matheus.cep.boot";
+public class ApplicationServer implements WebServer {
+
+    private static final String CONFIG_LOCATION = "br.messora.matheus.cep.boot";
 
     public static final int DEFAULT_PORT = 15081;
     public static final String CONTEXT_PATH = "/";
 
     public static final String MAPPING_URL = "/*";
     public static final String DEFAULT_PROFILE = "staging";
+    public static final int IDLE_TIMEOUT = 30000;
 
-    private int jettyPort;
-
+//    private int jettyPort;
     private Server server;
-    private String customProfile;
-
-    public static void main(String[] args) throws Exception {
-        ApplicationServer server = new ApplicationServer();
-        server.addProfile("self-monitored");
-        server.start(ApplicationServer.DEFAULT_PORT);
-    }
-
-    private void addProfile(String preload) {
-        customProfile = preload;
-    }
+//    private String customProfile;
 
     public void start() throws Exception {
-        start(0);
+        start(DEFAULT_PORT);
     }
 
-    public void start(Integer port) throws Exception {
+    public void start(int port) throws Exception {
+        ThreadPool threadPool = configThreadPool();
+        configServer(port, threadPool);
+        startServer();
+
+//        ServerConnector connector = (ServerConnector) server.getConnectors()[0];
+//        jettyPort = connector.getLocalPort();
+    }
+
+    private QueuedThreadPool configThreadPool() {
         QueuedThreadPool threadPool = new QueuedThreadPool();
         threadPool.setMaxThreads(100);
+        return threadPool;
+    }
+
+    private void startServer() throws Exception {
+        server.start();
+    }
+
+    private void configServer(int port, ThreadPool threadPool) throws Exception {
         server = new Server(threadPool);
         server.setHandler(getServletContextHandler(getContext()));
         server.setConnectors(new Connector[]{getHttpConnector(port)});
-        server.start();
-
-        ServerConnector connector = (ServerConnector) server.getConnectors()[0];
-        jettyPort = connector.getLocalPort();
     }
 
     public void stop() throws Exception {
@@ -63,7 +68,7 @@ public class ApplicationServer {
         HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory();
         ServerConnector http = new ServerConnector(server, httpConnectionFactory);
         http.setPort(port);
-        http.setIdleTimeout(30000);
+        http.setIdleTimeout(IDLE_TIMEOUT);
 
         return http;
     }
@@ -71,7 +76,6 @@ public class ApplicationServer {
     private WebAppContext getServletContextHandler(WebApplicationContext context) throws
             IOException {
         WebAppContext webApp = new WebAppContext();
-        webApp.setErrorHandler(null);
         webApp.setContextPath(CONTEXT_PATH);
         webApp.addServlet(new ServletHolder(new DispatcherServlet(context)), MAPPING_URL);
         webApp.addEventListener(new ContextLoaderListener(context));
@@ -82,16 +86,11 @@ public class ApplicationServer {
     private WebApplicationContext getContext() throws IOException {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.setConfigLocation(CONFIG_LOCATION);
-        if (org.springframework.util.StringUtils.hasText(customProfile)) {
-            context.getEnvironment().setDefaultProfiles(DEFAULT_PROFILE, customProfile);
-        } else {
-            context.getEnvironment().setDefaultProfiles(DEFAULT_PROFILE);
-        }
+        context.getEnvironment().setDefaultProfiles(DEFAULT_PROFILE);
+//        if (hasText(customProfile)) {
+//            context.getEnvironment().setDefaultProfiles(customProfile);
+//        }
 
         return context;
-    }
-
-    public int getJettyPort() {
-        return jettyPort;
     }
 }
