@@ -2,6 +2,7 @@ package br.messora.matheus.cep.domain.postalAddress.service;
 
 import br.messora.matheus.cep.domain.postalAddress.CEP;
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
+import br.messora.matheus.cep.domain.postalAddress.PostalAddressImpl;
 import br.messora.matheus.cep.infrastructure.repository.logradouro.Logradouro;
 import br.messora.matheus.cep.infrastructure.repository.logradouro.LogradouroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class PostalAddressServiceImpl implements PostalAddressService {
     @Override
     public PostalAddress find(CEP cep) {
         Logradouro logradouro = repository.findByCep(cep.fullCode());
-        return null;
+        return new PostalAddressImpl(logradouro);
     }
 }
 

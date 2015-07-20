@@ -14,7 +14,6 @@ public class PostalAddressEndpoint {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-
     @RequestMapping(value = "/postal_address", method = RequestMethod.GET)
     public ResponseEntity<PostalAddressDTO> get() {
         return new ResponseEntity<>(new PostalAddressDTO(), HttpStatus.OK);

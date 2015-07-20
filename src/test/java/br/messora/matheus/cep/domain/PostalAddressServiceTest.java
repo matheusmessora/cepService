@@ -30,7 +30,7 @@ public class PostalAddressServiceTest {
     }
 
     @Test
-    public void should_return_correct_postal_address_from_correct_CEP(){
+    public void should_return_postal_address_from_correct_CEP(){
         CEP cep = CEP.from("01535001");
         Logradouro mock = new Logradouro();
         mock.setDescription("Rua Paulo Orozimbo");
