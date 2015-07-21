@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.Matchers.equalTo;
 
-public class CepEndpointIT extends IntegrationServer {
+public class PostalAddressEndpointIT extends IntegrationServer {
 
 
     @Test

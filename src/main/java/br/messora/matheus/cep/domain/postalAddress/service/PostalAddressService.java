@@ -7,7 +7,7 @@ public interface PostalAddressService {
 
     /**
      * Busca um Endereco Postal dado o CEP informado.<br />
-     * @param cep
+     * @param cep CEP para realizar a pesquisa
      * @return null caso nenhum endereco tenha sido encontrado
      */
     PostalAddress find(CEP cep);

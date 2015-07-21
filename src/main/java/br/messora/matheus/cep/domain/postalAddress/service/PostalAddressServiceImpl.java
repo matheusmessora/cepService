@@ -40,8 +40,6 @@ public class PostalAddressServiceImpl implements PostalAddressService {
      * Gera um novo CEP com o ultimo zero a direita adicionado a partir de um CEP especifico.<br />
      * Ex. Caso seja informado 01535999, o novo CEp retornado sera 01535990.<br />
      * Caso seja informado 01535990, o novo CEP retornado sera 01535900
-     * @param cep
-     * @return
      */
     private CEP nextCEP(CEP cep, int lastZerosCount) {
         String fullCode = cep.fullCode();
