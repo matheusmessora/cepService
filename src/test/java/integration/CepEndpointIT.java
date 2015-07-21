@@ -34,4 +34,16 @@ public class CepEndpointIT extends IntegrationServer {
             .assertThat()
             .statusCode(HttpStatus.SC_NOT_FOUND);
     }
+
+    @Test
+    public void should_return_BAD_REQUEST_when_cep_invalid() {
+        get("http://127.0.0.1:15081/postal_address?cep=X9999123")
+            .then()
+            .assertThat()
+            .statusCode(HttpStatus.SC_BAD_REQUEST)
+            .and()
+            .body("message", equalTo("CEP invalido"))
+            .and()
+            .body("code", equalTo("cep_invalid"));
+    }
 }

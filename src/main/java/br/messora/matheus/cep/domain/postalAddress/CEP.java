@@ -21,6 +21,12 @@ public final  class CEP {
         prefix = cep.substring(0, 5);
     }
 
+    /**
+     * Instancia um novo {@link CEP}. Para ser valido ele deve possuir 8 digitos. Apenas o caracter - (traço) eh aceito<br />
+     * Este metodo pode lancar um {@link IllegalArgumentException} caso o parametro esteja incorreto
+     * @param cep
+     * @return
+     */
     public static CEP from(String cep) {
         if(StringUtils.isEmpty(cep)){
             illegalCep(cep);
