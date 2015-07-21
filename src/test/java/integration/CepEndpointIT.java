@@ -18,19 +18,13 @@ public class CepEndpointIT extends IntegrationServer {
             .assertThat()
             .statusCode(HttpStatus.SC_OK)
             .and()
-                .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"));
-//            .and()
-//            .body("district.city.state.country.code", equalTo("BR"))
-//            .and()
-//            .body("district.city.state.country.name", equalTo("BRAZIL"))
-//            .and()
-//            .body("district.city.code", equalTo("SP"))
-//            .and()
-//            .body("district.city.name", equalTo("São Paulo"))
-//            .and()
-//            .body("district.city.state.code", equalTo("SP"))
-//            .and()
-//            .body("district.name", equalTo("Cambuci"));
+                .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"))
+            .and()
+                .body("district", equalTo("Cambuci"))
+            .and()
+            .body("city", equalTo("Sao Paulo"))
+            .and()
+            .body("uf", equalTo("SP"));
     }
 
     @Test

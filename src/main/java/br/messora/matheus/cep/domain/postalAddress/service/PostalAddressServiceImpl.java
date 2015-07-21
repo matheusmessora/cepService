@@ -16,6 +16,16 @@ public class PostalAddressServiceImpl implements PostalAddressService {
 
     @Override
     public PostalAddress find(CEP cep) {
+        PostalAddress postalAddress = null;
+        Logradouro logradouro = findLogradouro(cep);
+
+        if(logradouro != null) {
+            postalAddress = new PostalAddressImpl(logradouro);
+        }
+        return postalAddress;
+    }
+
+    private Logradouro findLogradouro(CEP cep) {
         Logradouro logradouro = null;
         for(int lastZerosCount = 0; lastZerosCount < cep.fullCode().length(); lastZerosCount++){
             logradouro = repository.findByCep(cep.fullCode());
@@ -23,11 +33,7 @@ public class PostalAddressServiceImpl implements PostalAddressService {
                 cep = nextCEP(cep, lastZerosCount+1);
             }
         }
-
-        if(logradouro == null){
-            return null;
-        }
-        return new PostalAddressImpl(logradouro);
+        return logradouro;
     }
 
     /**
