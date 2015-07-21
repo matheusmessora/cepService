@@ -5,6 +5,5 @@ package br.messora.matheus.cep.domain.postalAddress;
  */
 public interface PostalAddress {
 
-
     String address();
 }

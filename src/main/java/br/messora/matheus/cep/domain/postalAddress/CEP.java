@@ -11,15 +11,14 @@ import org.springframework.util.StringUtils;
  */
 public final  class CEP {
 
+    private String prefix;
     private String suffix;
-
-    private String fullCode;
 
     private CEP(String cep) {
         cep = checkIntegrity(cep);
 
         suffix = cep.substring(5);
-        fullCode = cep;
+        prefix = cep.substring(0, 5);
     }
 
     public static CEP from(String cep) {
@@ -38,13 +37,17 @@ public final  class CEP {
         return suffix;
     }
 
+    public String prefix() {
+        return prefix;
+    }
+
     /**
      * Retorna o codigo do CEP sem o traço. <br />
      * Ex. 01535001
      * @return 01535001
      */
     public String fullCode() {
-        return fullCode;
+        return prefix() + suffix();
     }
 
     private static void illegalCep(String cep) {

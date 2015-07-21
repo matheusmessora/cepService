@@ -16,8 +16,36 @@ public class PostalAddressServiceImpl implements PostalAddressService {
 
     @Override
     public PostalAddress find(CEP cep) {
-        Logradouro logradouro = repository.findByCep(cep.fullCode());
+        Logradouro logradouro = null;
+        for(int lastZerosCount = 0; lastZerosCount < cep.fullCode().length(); lastZerosCount++){
+            logradouro = repository.findByCep(cep.fullCode());
+            if(logradouro == null){
+                cep = nextCEP(cep, lastZerosCount+1);
+            }
+        }
+
+        if(logradouro == null){
+            return null;
+        }
         return new PostalAddressImpl(logradouro);
+    }
+
+    /**
+     * Gera um novo CEP com o ultimo zero a direita adicionado a partir de um CEP especifico.<br />
+     * Ex. Caso seja informado 01535999, o novo CEp retornado sera 01535990.<br />
+     * Caso seja informado 01535990, o novo CEP retornado sera 01535900
+     * @param cep
+     * @return
+     */
+    private CEP nextCEP(CEP cep, int lastZerosCount) {
+        String fullCode = cep.fullCode();
+
+        String zeros = "";
+        while (zeros.length() < lastZerosCount) {
+            zeros = zeros + "0";
+        }
+        String cepCode = fullCode.substring(0, fullCode.length() - lastZerosCount) + zeros;
+        return CEP.from(cepCode);
     }
 }
 

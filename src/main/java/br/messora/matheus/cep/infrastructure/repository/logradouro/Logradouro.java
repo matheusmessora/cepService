@@ -18,6 +18,14 @@ public class Logradouro {
     @Column
     private String description;
 
+    public Logradouro() {
+    }
+
+    public Logradouro(String cep, String logradouro) {
+        this.cep = cep;
+        this.description = logradouro;
+    }
+
     public Long getId() {
         return id;
     }
