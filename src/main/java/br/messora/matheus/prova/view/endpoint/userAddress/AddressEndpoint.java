@@ -34,15 +34,37 @@ public class AddressEndpoint {
 
     @RequestMapping(value = "/address", method = RequestMethod.POST)
     public ResponseEntity get(@RequestBody(required = false) UserAddressDTO dto) {
+        check(dto);
+
+        UserAddress address = getUserAddress(dto);
+
+        return parseToResponse(address);
+    }
+
+    private UserAddress getUserAddress(@RequestBody(required = false) UserAddressDTO dto) {
         PostalAddress postalAddress = postalAddressService.find(CEP.from(dto.getCep()));
 
         UserAddress address = UserAddressBuilder.newBuilder()
                 .withUser(dto.getIdUser())
                 .withPostalAddress(postalAddress)
+                .withNumber(dto.getNumber())
                 .build();
 
         address = userAddressService.create(address);
-        return parseToResponse(address);
+        return address;
+    }
+
+    private void check(UserAddressDTO dto) {
+        if(dto.getNumber() == 0) {
+            throw new IllegalArgumentException("number_mandatory");
+        }
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErroDTO numberIsEmptyHandler(IllegalArgumentException ex, HttpServletResponse response) {
+        return new ErroDTO(ex.getMessage(), "Numero eh obrigatorio");
     }
 
     @ExceptionHandler(InvalidCEP.class)

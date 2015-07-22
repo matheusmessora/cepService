@@ -12,6 +12,7 @@ public class UserAddressDTO {
     private String city;
     private String uf;
     private String district;
+    private int number;
 
     public UserAddressDTO() {
     }
@@ -23,6 +24,7 @@ public class UserAddressDTO {
         this.district = userAddress.address().district();
         this.city = userAddress.address().city().getDescription();
         this.uf = userAddress.address().city().getUf();
+        this.number = userAddress.number();
     }
 
     public Long getId() {
@@ -80,5 +82,13 @@ public class UserAddressDTO {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

@@ -59,4 +59,9 @@ public class UserAddressEntity implements UserAddress {
     public PostalAddress address() {
         return address;
     }
+
+    @Override
+    public Integer number() {
+        return number;
+    }
 }

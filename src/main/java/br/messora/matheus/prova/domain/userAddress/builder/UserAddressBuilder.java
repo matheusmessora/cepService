@@ -22,11 +22,10 @@ public class UserAddressBuilder {
          * @param cep
          * @return
          */
-        AddressBuilderFinalStep withPostalAddress(PostalAddress cep);
+        AddressBuilderNumberStep withPostalAddress(PostalAddress cep);
     }
 
-    public interface AddressBuilderFinalStep {
-
+    public interface AddressBuilderNumberStep {
         /**
          * Metodo <b>Opcional</b>.<br />
          * Insere o numero do endereco
@@ -34,6 +33,11 @@ public class UserAddressBuilder {
          * @return
          */
         AddressBuilderFinalStep withNumber(int number);
+
+    }
+
+    public interface AddressBuilderFinalStep {
+
 
         /**
          * Metodo <b>Opcional</b>.<br />
@@ -48,7 +52,7 @@ public class UserAddressBuilder {
     }
 
 
-    private static class Steps implements AddressBuilderFinalStep, AddressBuilderCepStep, AddressBuilderUserStep {
+    private static class Steps implements AddressBuilderFinalStep, AddressBuilderCepStep, AddressBuilderUserStep, AddressBuilderNumberStep {
 
         private int number;
         private String complement;
@@ -56,7 +60,7 @@ public class UserAddressBuilder {
         private Long iduser;
 
         @Override
-        public AddressBuilderFinalStep withPostalAddress(PostalAddress postalAddress) {
+        public AddressBuilderNumberStep withPostalAddress(PostalAddress postalAddress) {
             this.postalAddress = postalAddress;
             return this;
         }

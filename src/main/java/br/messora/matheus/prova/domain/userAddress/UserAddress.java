@@ -12,4 +12,6 @@ public interface UserAddress {
     CEP cep();
 
     PostalAddress address();
+
+    Integer number();
 }
