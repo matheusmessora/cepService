@@ -26,12 +26,16 @@ public class ApplicationServer implements WebServer {
     public static final String DEFAULT_PROFILE = "staging";
     public static final int IDLE_TIMEOUT = 30000;
 
-//    private int jettyPort;
     private Server server;
-//    private String customProfile;
+    private int jettyPort;
 
     public void start() throws Exception {
-        start(DEFAULT_PORT);
+        start(0);
+    }
+
+    @Override
+    public int portNUmber() {
+        return jettyPort;
     }
 
     public void start(int port) throws Exception {
@@ -39,8 +43,8 @@ public class ApplicationServer implements WebServer {
         configServer(port, threadPool);
         startServer();
 
-//        ServerConnector connector = (ServerConnector) server.getConnectors()[0];
-//        jettyPort = connector.getLocalPort();
+        ServerConnector connector = (ServerConnector) server.getConnectors()[0];
+        jettyPort = connector.getLocalPort();
     }
 
     private QueuedThreadPool configThreadPool() {
@@ -63,6 +67,7 @@ public class ApplicationServer implements WebServer {
         server.stop();
         server.destroy();
     }
+
 
     private Connector getHttpConnector(Integer port) {
         HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory();

@@ -3,20 +3,26 @@ package integration.shared;
 import br.messora.matheus.prova.boot.server.ApplicationServer;
 import br.messora.matheus.prova.boot.server.WebServer;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 
 public class IntegrationServer {
 
     WebServer server;
+    protected int jettyPort;
 
-    @BeforeClass
+    @BeforeMethod(alwaysRun = true)
     public void init() throws Exception {
         server = new ApplicationServer();
         server.start();
+        jettyPort = server.portNUmber();
     }
 
-    @AfterClass
+    @AfterMethod(alwaysRun = true)
     public void destroy() throws Exception {
         server.stop();
     }
+
+
 }

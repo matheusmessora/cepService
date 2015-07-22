@@ -13,11 +13,15 @@ public class UserAddressEndpointIT extends IntegrationServer {
 
     @Test
     public void should_create_address() {
+        createUserAddressWithoutComplement();
+    }
+
+    private void createUserAddressWithoutComplement() {
         given()
             .contentType(ContentType.JSON)
             .body("{ \"cep\": \"01535001\",\"idUser\": 1, \"number\": 110 }")
             .when()
-                .post("http://127.0.0.1:15081/user_address")
+                .post("http://127.0.0.1:" + jettyPort + "/user_address")
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
@@ -37,30 +41,34 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .body("district", equalTo("Cambuci"));
     }
 
-    @Test
-    public void should_create_address_with_complement() {
+    private void createUserAddressWithComplement() {
         given()
-            .contentType(ContentType.JSON)
-            .body("{ \"cep\": \"01535001\",\"idUser\": 1, \"number\": 110, \"complement\": \"casa\" }")
-            .when()
-                .post("http://127.0.0.1:15081/user_address")
-            .then()
+                .contentType(ContentType.JSON)
+                .body("{ \"cep\": \"01535001\",\"idUser\": 1, \"number\": 110, \"complement\": \"casa\" }")
+                .when()
+                .post("http://127.0.0.1:" + jettyPort + "/user_address")
+                .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-            .and()
-                .body("id", equalTo(2))
-            .and()
-            .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"))
-            .and()
-            .body("number", equalTo(110))
-            .and()
-            .body("complement", equalTo("casa"))
-            .and()
-            .body("city", equalTo("Sao Paulo"))
-            .and()
-            .body("uf", equalTo("SP"))
-            .and()
-            .body("district", equalTo("Cambuci"));
+                .and()
+                .body("id", equalTo(1))
+                .and()
+                .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"))
+                .and()
+                .body("number", equalTo(110))
+                .and()
+                .body("complement", equalTo("casa"))
+                .and()
+                .body("city", equalTo("Sao Paulo"))
+                .and()
+                .body("uf", equalTo("SP"))
+                .and()
+                .body("district", equalTo("Cambuci"));
+    }
+
+    @Test
+    public void should_create_address_with_complement() {
+        createUserAddressWithComplement();
     }
 
     @Test
@@ -69,7 +77,7 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .contentType(ContentType.JSON)
             .body("{ \"cep\": \"12345\",\"idUser\": 1, \"number\": 110 }")
             .when()
-                .post("http://127.0.0.1:15081/user_address")
+                .post("http://127.0.0.1:" + jettyPort + "/user_address")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -83,7 +91,7 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .contentType(ContentType.JSON)
                 .body("{ \"cep\": \"01535001\",\"idUser\": 1 }")
             .when()
-                .post("http://127.0.0.1:15081/user_address")
+                .post("http://127.0.0.1:" + jettyPort + "/user_address")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -99,7 +107,7 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .contentType(ContentType.JSON)
             .body("{ \"cep\": \"01535444\",\"idUser\": 1, \"number\": 110 }")
             .when()
-                .post("http://127.0.0.1:15081/user_address")
+                .post("http://127.0.0.1:" + jettyPort + "/user_address")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -107,11 +115,13 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .body("code", equalTo("postal_address_not_found"));
     }
 
-    @Test(dependsOnMethods = "should_create_address")
+    @Test
     public void should_return_postall_address_by_id() {
+        createUserAddressWithoutComplement();
+
         given()
             .when()
-                .get("http://127.0.0.1:15081/user_address/1")
+                .get("http://127.0.0.1:" + jettyPort + "/user_address/1")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_OK)
@@ -132,20 +142,22 @@ public class UserAddressEndpointIT extends IntegrationServer {
     }
 
     @Test
-    public void should_return_no_content_with_id_does_not_exist() {
+    public void should_return_no_content_if_id_does_not_exist() {
         given()
             .when()
-                .get("http://127.0.0.1:15081/user_address/999")
+                .get("http://127.0.0.1:" + jettyPort + "/user_address/999")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = "should_return_postall_address_by_id")
+    @Test
     public void should_return_OK_when_delete_by_id() {
+        createUserAddressWithoutComplement();
+
         given()
             .when()
-                .delete("http://127.0.0.1:15081/user_address/1")
+                .delete("http://127.0.0.1:" + jettyPort + "/user_address/1")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_OK);
@@ -155,7 +167,7 @@ public class UserAddressEndpointIT extends IntegrationServer {
     public void should_return_no_content_when_delete_by_id_does_not_exist() {
         given()
             .when()
-                .delete("http://127.0.0.1:15081/user_address/9999")
+                .delete("http://127.0.0.1:" + jettyPort + "/user_address/9999")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -164,16 +176,18 @@ public class UserAddressEndpointIT extends IntegrationServer {
 
     @Test(dependsOnMethods = "should_create_address_with_complement")
     public void should_return_postall_address_updated_with_complement() {
+        createUserAddressWithoutComplement();
+
         given()
                 .contentType(ContentType.JSON)
                 .body("{ \"cep\": \"01504001\",\"idUser\": 1, \"number\": 999, \"complement\": \"casa\" }")
                 .when()
-                .put("http://127.0.0.1:15081/user_address/2")
+                .put("http://127.0.0.1:" + jettyPort + "/user_address/1")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .and()
-                .body("id", equalTo(2))
+                .body("id", equalTo(1))
                 .and()
                 .body("address", equalTo("Rua Vergueiro - até 1289 - lado ímpar"))
                 .and()

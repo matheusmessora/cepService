@@ -10,11 +10,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 
 public class PostalAddressEndpointIT extends IntegrationServer {
+    
+    
 
 
     @Test
     public void should_return_postal_address_from_correct_cep() {
-        get("http://127.0.0.1:15081/postal_address?cep=01535001")
+        get("http://127.0.0.1:" + jettyPort + "/postal_address?cep=01535001")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_OK)
@@ -30,7 +32,7 @@ public class PostalAddressEndpointIT extends IntegrationServer {
 
     @Test
     public void should_return_postal_address_from_CEP_without_zero() {
-        get("http://127.0.0.1:15081/postal_address?cep=77599999")
+        get("http://127.0.0.1:" + jettyPort + "/postal_address?cep=77599999")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_OK)
@@ -46,7 +48,7 @@ public class PostalAddressEndpointIT extends IntegrationServer {
 
     @Test
     public void should_return_NOT_FOUND_when_cep_does_not_exist() {
-        get("http://127.0.0.1:15081/postal_address?cep=99999123")
+        get("http://127.0.0.1:" + jettyPort + "/postal_address?cep=99999123")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -54,7 +56,7 @@ public class PostalAddressEndpointIT extends IntegrationServer {
 
     @Test
     public void should_return_BAD_REQUEST_when_cep_invalid() {
-        get("http://127.0.0.1:15081/postal_address?cep=X9999123")
+        get("http://127.0.0.1:" + jettyPort + "/postal_address?cep=X9999123")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_BAD_REQUEST)

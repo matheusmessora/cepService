@@ -23,4 +23,10 @@ public interface WebServer {
      * @throws Exception
      */
     void stop() throws Exception;
+
+    /**
+     * Retorna a porta na qual o servidor fez o bind
+     * @return
+     */
+    int portNUmber();
 }
