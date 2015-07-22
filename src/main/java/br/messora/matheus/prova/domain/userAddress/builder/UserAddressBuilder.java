@@ -13,6 +13,8 @@ public class UserAddressBuilder {
     public interface AddressBuilderUserStep {
 
         AddressBuilderCepStep withUser(Long idUser);
+
+        AddressBuilderUserStep withId(Long userAddressID);
     }
 
     public interface AddressBuilderCepStep {
@@ -58,6 +60,7 @@ public class UserAddressBuilder {
         private String complement;
         private PostalAddress postalAddress;
         private Long iduser;
+        private Long userAddressID;
 
         @Override
         public AddressBuilderNumberStep withPostalAddress(PostalAddress postalAddress) {
@@ -79,12 +82,18 @@ public class UserAddressBuilder {
 
         @Override
         public UserAddress build() {
-            return new UserAddressEntity(iduser, postalAddress, number, complement);
+            return new UserAddressEntity(userAddressID, iduser, postalAddress, number, complement);
         }
 
         @Override
         public AddressBuilderCepStep withUser(Long idUser) {
             this.iduser = idUser;
+            return this;
+        }
+
+        @Override
+        public AddressBuilderUserStep withId(Long userAddressID) {
+            this.userAddressID = userAddressID;
             return this;
         }
     }

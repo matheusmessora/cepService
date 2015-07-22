@@ -29,7 +29,11 @@ public class UserAddressEntity implements UserAddress {
     @Transient
     private transient CEP cep;
 
-    public UserAddressEntity(Long userId, PostalAddress postalAddress, Integer number, String complement){
+    public UserAddressEntity() {
+    }
+
+    public UserAddressEntity(Long id, Long userId, PostalAddress postalAddress, Integer number, String complement){
+        this.id = id;
         this.userId = userId;
         this.address = postalAddress;
         this.number = number;

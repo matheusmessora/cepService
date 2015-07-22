@@ -1,6 +1,7 @@
 package br.messora.matheus.prova.domain.userAddress.service;
 
 import br.messora.matheus.prova.domain.userAddress.UserAddress;
+import br.messora.matheus.prova.domain.userAddress.UserAddressNotFound;
 import br.messora.matheus.prova.domain.userAddress.builder.UserAddressBuilder;
 import br.messora.matheus.prova.infrastructure.repository.address.AddressEntity;
 import br.messora.matheus.prova.infrastructure.repository.district.City;
@@ -13,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
@@ -45,6 +47,13 @@ public class UserAddressServiceTest {
         when(repository.save((UserAddressEntity) any())).thenReturn(new UserAddressEntity(1L));
         userAddress = service.create(userAddress);
         assertEquals(userAddress.id().longValue(), 1L);
+    }
+
+    @Test(expectedExceptions = UserAddressNotFound.class)
+    public void should_throw_userAdressNotFound_when_id_not_found(){
+
+        when(repository.findOne(anyLong())).thenReturn(null);
+        service.find(1L);
     }
 
 }

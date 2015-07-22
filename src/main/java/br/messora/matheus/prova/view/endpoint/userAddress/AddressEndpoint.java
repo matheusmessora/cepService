@@ -6,19 +6,14 @@ import br.messora.matheus.prova.domain.postalAddress.PostalAddress;
 import br.messora.matheus.prova.domain.postalAddress.PostalAddressNotFound;
 import br.messora.matheus.prova.domain.postalAddress.service.PostalAddressService;
 import br.messora.matheus.prova.domain.userAddress.UserAddress;
+import br.messora.matheus.prova.domain.userAddress.UserAddressNotFound;
 import br.messora.matheus.prova.domain.userAddress.builder.UserAddressBuilder;
 import br.messora.matheus.prova.domain.userAddress.service.UserAddressService;
 import br.messora.matheus.prova.view.endpoint.ErroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,16 +27,36 @@ public class AddressEndpoint {
     @Autowired
     private PostalAddressService postalAddressService;
 
-    @RequestMapping(value = "/address", method = RequestMethod.POST)
-    public ResponseEntity get(@RequestBody(required = false) UserAddressDTO dto) {
+    @RequestMapping(value = "/user_address", method = RequestMethod.POST)
+    public ResponseEntity create(@RequestBody UserAddressDTO dto) {
         check(dto);
 
-        UserAddress address = getUserAddress(dto);
+        UserAddress address = createUserAddress(dto);
 
-        return parseToResponse(address);
+        return parseToResponse(address,HttpStatus.CREATED);
     }
 
-    private UserAddress getUserAddress(@RequestBody(required = false) UserAddressDTO dto) {
+    @RequestMapping(value = "/user_address/{id}", method = RequestMethod.GET)
+    public ResponseEntity get(@PathVariable Long id) {
+
+        return parseToResponse(userAddressService.find(id),HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user_address/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity delete(@PathVariable Long id) {
+        userAddressService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/user_address/{id}", method = RequestMethod.PUT)
+    public ResponseEntity update(@PathVariable Long id, @RequestBody UserAddressDTO dto) {
+        UserAddress address = updateUserAddress(id, dto);
+
+        return parseToResponse(address,HttpStatus.OK);
+    }
+
+    private UserAddress createUserAddress(UserAddressDTO dto) {
         PostalAddress postalAddress = postalAddressService.find(CEP.from(dto.getCep()));
 
         UserAddress address = UserAddressBuilder.newBuilder()
@@ -52,6 +67,21 @@ public class AddressEndpoint {
                 .build();
 
         address = userAddressService.create(address);
+        return address;
+    }
+
+    private UserAddress updateUserAddress(Long id, UserAddressDTO dto) {
+        PostalAddress postalAddress = postalAddressService.find(CEP.from(dto.getCep()));
+
+        UserAddress address = UserAddressBuilder.newBuilder()
+                .withId(id)
+                .withUser(dto.getIdUser())
+                .withPostalAddress(postalAddress)
+                .withNumber(dto.getNumber())
+                .withComplement(dto.getComplement())
+                .build();
+
+        address = userAddressService.update(address);
         return address;
     }
 
@@ -82,8 +112,15 @@ public class AddressEndpoint {
         return new ErroDTO("postal_address_not_found", "CEP nao encontrado");
     }
 
-    private ResponseEntity parseToResponse(UserAddress postalAddress) {
-        return new ResponseEntity<>(new UserAddressDTO(postalAddress), HttpStatus.CREATED);
+    @ExceptionHandler(UserAddressNotFound.class)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ErroDTO postalAddressNotFoundHandler(UserAddressNotFound ex, HttpServletResponse response) {
+        return new ErroDTO("user_address_not_found", "Endereco de usuario nao encontrado");
+    }
+
+    private ResponseEntity parseToResponse(UserAddress postalAddress, HttpStatus status) {
+        return new ResponseEntity<>(new UserAddressDTO(postalAddress), status);
     }
 
 }
