@@ -1,5 +1,7 @@
 package br.messora.matheus.cep.domain.postalAddress;
 
+import br.messora.matheus.cep.domain.cep.CEP;
+import br.messora.matheus.cep.domain.cep.InvalidCEP;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -16,31 +18,41 @@ public class CEPTest {
     }
 
     @Test
-    public void should_throw_illegalArgument_if_invalid_cep() {
+    public void should_throw_InvalidCEP_if_cep_has_nine_digits() {
         try {
-            CEP.from("015350019");
+            CEP.from("123456789");
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals(e.getMessage(), "CEP [015350019] invalido");
+        } catch (InvalidCEP e) {
+            assertEquals(e.getMessage(), "CEP [123456789] invalido");
         }
     }
 
     @Test
-    public void should_throw_illegalArgument_if_cep_contains_chars() {
+    public void should_throw_InvalidCEP_if_cep_has_seven_digits() {
+        try {
+            CEP.from("1234567");
+            fail();
+        } catch (InvalidCEP e) {
+            assertEquals(e.getMessage(), "CEP [1234567] invalido");
+        }
+    }
+
+    @Test
+    public void should_throw_InvalidCEP_if_cep_contains_chars() {
         try {
             CEP.from("01535X01");
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCEP e) {
             assertEquals(e.getMessage(), "CEP [01535X01] invalido");
         }
     }
 
     @Test
-    public void should_throw_illegalArgument_if_cep_empty() {
+    public void should_throw_InvalidCEP_if_cep_empty() {
         try {
             CEP.from("");
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCEP e) {
             assertEquals(e.getMessage(), "CEP [] invalido");
         }
     }

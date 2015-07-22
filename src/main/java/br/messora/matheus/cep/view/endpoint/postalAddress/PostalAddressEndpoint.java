@@ -1,7 +1,9 @@
 package br.messora.matheus.cep.view.endpoint.postalAddress;
 
-import br.messora.matheus.cep.domain.postalAddress.CEP;
+import br.messora.matheus.cep.domain.cep.CEP;
+import br.messora.matheus.cep.domain.cep.InvalidCEP;
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
+import br.messora.matheus.cep.domain.postalAddress.PostalAddressNotFound;
 import br.messora.matheus.cep.domain.postalAddress.service.PostalAddressService;
 import br.messora.matheus.cep.view.endpoint.ErroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,28 +32,22 @@ public class PostalAddressEndpoint {
         return parseToResponse(postalAddress);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(InvalidCEP.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErroDTO notFoundHandler(IllegalArgumentException ex, HttpServletResponse response) {
+    public ErroDTO invalidCepHandler(InvalidCEP ex, HttpServletResponse response) {
         return new ErroDTO("cep_invalid", "CEP invalido");
     }
 
-    private ResponseEntity parseToResponse(PostalAddress postalAddress) {
-        ResponseEntity responseEntity = notFound();
-        if (postalAddress != null) {
-            responseEntity = ok(postalAddress);
-        }
-        return responseEntity;
+    @ExceptionHandler(PostalAddressNotFound.class)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public ErroDTO postalAddressNotFoundHandler(PostalAddressNotFound ex, HttpServletResponse response) {
+        return new ErroDTO("postal_address_not_found", "CEP nao encontrado");
     }
 
-    private ResponseEntity ok(PostalAddress postalAddress) {
+    private ResponseEntity parseToResponse(PostalAddress postalAddress) {
         return new ResponseEntity<>(new PostalAddressDTO(postalAddress), HttpStatus.OK);
     }
-
-    private ResponseEntity notFound() {
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
-
 
 }

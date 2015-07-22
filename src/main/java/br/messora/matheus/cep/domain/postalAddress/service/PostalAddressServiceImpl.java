@@ -1,10 +1,9 @@
 package br.messora.matheus.cep.domain.postalAddress.service;
 
-import br.messora.matheus.cep.domain.postalAddress.CEP;
+import br.messora.matheus.cep.domain.cep.CEP;
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
-import br.messora.matheus.cep.domain.postalAddress.PostalAddressImpl;
-import br.messora.matheus.cep.infrastructure.repository.logradouro.Logradouro;
-import br.messora.matheus.cep.infrastructure.repository.logradouro.LogradouroRepository;
+import br.messora.matheus.cep.domain.postalAddress.PostalAddressNotFound;
+import br.messora.matheus.cep.infrastructure.repository.address.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,34 +11,34 @@ import org.springframework.stereotype.Service;
 public class PostalAddressServiceImpl implements PostalAddressService {
 
     @Autowired
-    private LogradouroRepository repository;
+    private AddressRepository repository;
 
     @Override
     public PostalAddress find(CEP cep) {
-        PostalAddress postalAddress = null;
-        Logradouro logradouro = findLogradouro(cep);
+        PostalAddress address = findPostallAddress(cep);
 
-        if(logradouro != null) {
-            postalAddress = new PostalAddressImpl(logradouro);
+        if(address == null) {
+            throw new PostalAddressNotFound();
         }
-        return postalAddress;
+
+        return address;
     }
 
-    private Logradouro findLogradouro(CEP cep) {
-        Logradouro logradouro = null;
-        for(int lastZerosCount = 0; lastZerosCount < cep.fullCode().length(); lastZerosCount++){
-            logradouro = repository.findByCep(cep.fullCode());
-            if(logradouro == null){
-                cep = nextCEP(cep, lastZerosCount+1);
+    private PostalAddress findPostallAddress(CEP cep) {
+        PostalAddress address = null;
+        for (int lastZerosCount = 0; lastZerosCount < cep.fullCode().length(); lastZerosCount++) {
+            address = repository.findByCep(cep.fullCode());
+            if (address == null) {
+                cep = nextCEP(cep, lastZerosCount + 1);
             }
         }
-        return logradouro;
+        return address;
     }
 
     /**
      * Gera um novo CEP com o ultimo zero a direita adicionado a partir de um CEP especifico.<br />
      * Ex. Caso seja informado 01535999, o novo CEp retornado sera 01535990.<br />
-     * Caso seja informado 01535990, o novo CEP retornado sera 01535900
+     * Caso seja informado 01535990, o novo CEP retornado sera 01535900 e assim por diante
      */
     private CEP nextCEP(CEP cep, int lastZerosCount) {
         String fullCode = cep.fullCode();

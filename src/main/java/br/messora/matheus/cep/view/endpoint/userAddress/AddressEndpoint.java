@@ -1,8 +1,15 @@
 package br.messora.matheus.cep.view.endpoint.userAddress;
 
+import br.messora.matheus.cep.domain.cep.CEP;
+import br.messora.matheus.cep.domain.cep.InvalidCEP;
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
+import br.messora.matheus.cep.domain.postalAddress.PostalAddressNotFound;
+import br.messora.matheus.cep.domain.postalAddress.service.PostalAddressService;
+import br.messora.matheus.cep.domain.userAddress.UserAddress;
+import br.messora.matheus.cep.domain.userAddress.builder.UserAddressBuilder;
+import br.messora.matheus.cep.domain.userAddress.service.UserAddressService;
 import br.messora.matheus.cep.view.endpoint.ErroDTO;
-import br.messora.matheus.cep.view.endpoint.postalAddress.PostalAddressDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,33 +26,41 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping
 public class AddressEndpoint {
 
+    @Autowired
+    private UserAddressService userAddressService;
+
+    @Autowired
+    private PostalAddressService postalAddressService;
+
     @RequestMapping(value = "/address", method = RequestMethod.POST)
-    public ResponseEntity get(@RequestBody PostalAddressDTO dto) {
-        return parseToResponse(null);
+    public ResponseEntity get(@RequestBody(required = false) UserAddressDTO dto) {
+        PostalAddress postalAddress = postalAddressService.find(CEP.from(dto.getCep()));
+
+        UserAddress address = UserAddressBuilder.newBuilder()
+                .withUser(dto.getIdUser())
+                .withPostalAddress(postalAddress)
+                .build();
+
+        address = userAddressService.create(address);
+        return parseToResponse(address);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(InvalidCEP.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErroDTO notFoundHandler(IllegalArgumentException ex, HttpServletResponse response) {
+    public ErroDTO notFoundHandler(InvalidCEP ex, HttpServletResponse response) {
         return new ErroDTO("cep_invalid", "CEP invalido");
     }
 
-    private ResponseEntity parseToResponse(PostalAddress postalAddress) {
-        ResponseEntity responseEntity = notFound();
-        if (postalAddress != null) {
-            responseEntity = ok(postalAddress);
-        }
-        return responseEntity;
+    @ExceptionHandler(PostalAddressNotFound.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErroDTO postalAddressNotFoundHandler(PostalAddressNotFound ex, HttpServletResponse response) {
+        return new ErroDTO("postal_address_not_found", "CEP nao encontrado");
     }
 
-    private ResponseEntity ok(PostalAddress postalAddress) {
-        return new ResponseEntity<>(new PostalAddressDTO(postalAddress), HttpStatus.CREATED);
+    private ResponseEntity parseToResponse(UserAddress postalAddress) {
+        return new ResponseEntity<>(new UserAddressDTO(postalAddress), HttpStatus.CREATED);
     }
-
-    private ResponseEntity notFound() {
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
-
 
 }

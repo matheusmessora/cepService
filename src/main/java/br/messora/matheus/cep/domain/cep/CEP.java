@@ -1,4 +1,4 @@
-package br.messora.matheus.cep.domain.postalAddress;
+package br.messora.matheus.cep.domain.cep;
 
 import org.springframework.util.StringUtils;
 
@@ -29,7 +29,7 @@ public final  class CEP {
      */
     public static CEP from(String cep) {
         if(StringUtils.isEmpty(cep)){
-            illegalCep(cep);
+            invalidCep(cep);
         }
         return new CEP(cep);
     }
@@ -56,17 +56,17 @@ public final  class CEP {
         return prefix() + suffix();
     }
 
-    private static void illegalCep(String cep) {
-        throw new IllegalArgumentException("CEP [" + cep + "] invalido");
+    private static void invalidCep(String cep) {
+        throw new InvalidCEP("CEP [" + cep + "] invalido");
     }
 
     private String checkIntegrity(String cep) {
         cep = cep.replace("-", "");
-        if(cep.length() > 8) {
-            illegalCep(cep);
+        if(cep.length() != 8) {
+            invalidCep(cep);
         }
         if(!hasOnlyNumbers(cep)){
-            illegalCep(cep);
+            invalidCep(cep);
         }
         return cep;
     }

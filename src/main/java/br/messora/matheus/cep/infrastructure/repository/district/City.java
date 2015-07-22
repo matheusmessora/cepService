@@ -1,6 +1,6 @@
 package br.messora.matheus.cep.infrastructure.repository.district;
 
-import br.messora.matheus.cep.infrastructure.repository.logradouro.Logradouro;
+import br.messora.matheus.cep.infrastructure.repository.address.AddressEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class City {
     private String uf;
 
     @OneToMany
-    private Set<Logradouro> logradouros;
+    private Set<AddressEntity> addressEntities;
 
     public City() {
     }
@@ -58,12 +58,12 @@ public class City {
         this.uf = uf;
     }
 
-    public Set<Logradouro> getLogradouros() {
-        return logradouros;
+    public Set<AddressEntity> getAddressEntities() {
+        return addressEntities;
     }
 
-    public void setLogradouros(
-        Set<Logradouro> logradouros) {
-        this.logradouros = logradouros;
+    public void setAddressEntities(
+            Set<AddressEntity> addressEntities) {
+        this.addressEntities = addressEntities;
     }
 }

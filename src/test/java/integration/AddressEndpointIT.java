@@ -14,13 +14,41 @@ public class AddressEndpointIT extends IntegrationServer {
     public void should_create_address() {
         given()
             .contentType(ContentType.JSON)
-            .body("{ \"cep\": \"01535001\" }")
+            .body("{ \"cep\": \"01535001\",\"idUser\": 1 }")
             .when()
-            .post("http://127.0.0.1:15081/address")
+                .post("http://127.0.0.1:15081/address")
             .then()
             .assertThat()
             .statusCode(HttpStatus.SC_CREATED)
             .and()
             .body("id", equalTo(1));
+    }
+
+    @Test
+    public void should_return_BAD_REQUEST_when_CEP_invalid() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("{ \"cep\": \"12345\",\"idUser\": 1 }")
+            .when()
+                .post("http://127.0.0.1:15081/address")
+            .then()
+            .assertThat()
+            .statusCode(HttpStatus.SC_BAD_REQUEST)
+            .and()
+            .body("code", equalTo("cep_invalid"));
+    }
+
+    @Test
+    public void should_return_BAD_REQUEST_when_CEP_not_found() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("{ \"cep\": \"01535444\",\"idUser\": 1 }")
+            .when()
+                .post("http://127.0.0.1:15081/address")
+            .then()
+            .assertThat()
+            .statusCode(HttpStatus.SC_BAD_REQUEST)
+            .and()
+            .body("code", equalTo("postal_address_not_found"));
     }
 }
