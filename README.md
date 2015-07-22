@@ -14,14 +14,14 @@ O modelo de CEP (CEP.java) foi baseado no artigo da Wikipedia (https://pt.wikipe
 - Jackson 2
 - Embedded Jetty 9 (br.messora.matheus.prova.boot.Main.java)
 
-##Para os testes Unitarios
+### Para os testes Unitarios
 - testng
 - Mockito
 
-##Para os testes Integrados
+### Para os testes Integrados
 - Rest-assured
 
-## Banco de dados
+### Banco de dados
 O Banco de dados esta configurado no pacote [br.messora.matheus.prova.boot].
 Foi utilizado um banco in-memory(hsqldb) para fins de teste e persistencia.
 
