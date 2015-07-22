@@ -13,6 +13,7 @@ public class UserAddressDTO {
     private String uf;
     private String district;
     private int number;
+    private String complement;
 
     public UserAddressDTO() {
     }
@@ -25,6 +26,7 @@ public class UserAddressDTO {
         this.city = userAddress.address().city().getDescription();
         this.uf = userAddress.address().city().getUf();
         this.number = userAddress.number();
+        this.complement = userAddress.complement();
     }
 
     public Long getId() {
@@ -90,5 +92,13 @@ public class UserAddressDTO {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
     }
 }

@@ -14,4 +14,6 @@ public interface UserAddress {
     PostalAddress address();
 
     Integer number();
+
+    String complement();
 }

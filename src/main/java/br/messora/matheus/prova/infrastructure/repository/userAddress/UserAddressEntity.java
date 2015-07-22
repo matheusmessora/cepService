@@ -64,4 +64,9 @@ public class UserAddressEntity implements UserAddress {
     public Integer number() {
         return number;
     }
+
+    @Override
+    public String complement() {
+        return complement;
+    }
 }

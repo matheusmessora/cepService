@@ -48,6 +48,7 @@ public class AddressEndpoint {
                 .withUser(dto.getIdUser())
                 .withPostalAddress(postalAddress)
                 .withNumber(dto.getNumber())
+                .withComplement(dto.getComplement())
                 .build();
 
         address = userAddressService.create(address);

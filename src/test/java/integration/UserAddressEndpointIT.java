@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 
 public class UserAddressEndpointIT extends IntegrationServer {
 
@@ -26,6 +27,34 @@ public class UserAddressEndpointIT extends IntegrationServer {
             .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"))
             .and()
             .body("number", equalTo(110))
+            .and()
+            .body("complement", nullValue())
+            .and()
+            .body("city", equalTo("Sao Paulo"))
+            .and()
+            .body("uf", equalTo("SP"))
+            .and()
+            .body("district", equalTo("Cambuci"));
+    }
+
+    @Test
+    public void should_create_address_with_complement() {
+        given()
+            .contentType(ContentType.JSON)
+            .body("{ \"cep\": \"01535001\",\"idUser\": 1, \"number\": 110, \"complement\": \"casa\" }")
+            .when()
+                .post("http://127.0.0.1:15081/address")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+            .and()
+                .body("id", equalTo(2))
+            .and()
+            .body("address", equalTo("Rua Paulo Orozimbo - de 629/630 ao fim"))
+            .and()
+            .body("number", equalTo(110))
+            .and()
+            .body("complement", equalTo("casa"))
             .and()
             .body("city", equalTo("Sao Paulo"))
             .and()
