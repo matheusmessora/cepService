@@ -1,7 +1,7 @@
 package integration.shared;
 
-import br.messora.matheus.cep.boot.server.ApplicationServer;
-import br.messora.matheus.cep.boot.server.WebServer;
+import br.messora.matheus.prova.boot.server.ApplicationServer;
+import br.messora.matheus.prova.boot.server.WebServer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 

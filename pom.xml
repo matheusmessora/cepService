@@ -203,7 +203,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.messora.matheus.cep.boot.Main</mainClass>
+                            <mainClass>br.messora.matheus.prova.boot.Main</mainClass>
                         </manifest>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
@@ -215,7 +215,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>br.messora.matheus.cep.boot.Main</mainClass>
+                            <mainClass>br.messora.matheus.prova.boot.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
