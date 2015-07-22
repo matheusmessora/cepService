@@ -1,6 +1,7 @@
 # Serviço de Endereço (playground)
 [![Build Status](https://travis-ci.org/matheusmessora/cepService.svg)](https://travis-ci.org/matheusmessora/cepService)
-sistema que compreende:
+
+Sistema que compreende:
 - Busca de endereços pelo CEP
 - Salvar endereço do usuario, seguindo as regras de CRUD
 
