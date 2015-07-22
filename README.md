@@ -1,5 +1,8 @@
-# cepService
-Servico de busca de endereco atraves do CEP (playground)
+# Serviço de Endereço (playground)
+sistema que compreende:
+- Busca de endereços pelo CEP
+- Salvar endereço do usuario, seguindo as regras de CRUD
+
 
 O modelo de CEP (CEP.java) foi baseado no artigo da Wikipedia (https://pt.wikipedia.org/wiki/C%C3%B3digo_de_Endere%C3%A7amento_Postal)
 
