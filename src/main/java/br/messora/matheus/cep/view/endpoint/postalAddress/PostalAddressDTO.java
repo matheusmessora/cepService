@@ -1,4 +1,4 @@
-package br.messora.matheus.cep.view.endpoint;
+package br.messora.matheus.cep.view.endpoint.postalAddress;
 
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
 import br.messora.matheus.cep.infrastructure.repository.district.City;

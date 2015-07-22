@@ -1,8 +1,9 @@
-package br.messora.matheus.cep.view.endpoint;
+package br.messora.matheus.cep.view.endpoint.postalAddress;
 
 import br.messora.matheus.cep.domain.postalAddress.CEP;
 import br.messora.matheus.cep.domain.postalAddress.PostalAddress;
 import br.messora.matheus.cep.domain.postalAddress.service.PostalAddressService;
+import br.messora.matheus.cep.view.endpoint.ErroDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
